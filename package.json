@@ -1,0 +1,22 @@
+{
+  "name": "taliiz-memory-game",
+  "version": "0.0.1",
+  "description": "A card matching memory game based on Seterra",
+  "main": "main.js",
+  "scripts": {
+    "test": "electron ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/brettkolodny/Taliiz-Memory-Game.git"
+  },
+  "author": "Brett Kolodny",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/brettkolodny/Taliiz-Memory-Game/issues"
+  },
+  "homepage": "https://github.com/brettkolodny/Taliiz-Memory-Game#readme",
+  "devDependencies": {
+    "electron": "^3.0.6"
+  }
+}
