@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Create Deck</title>
+</head>
+
+<body>
+    <form>
+        Deck Name:<input type="text" id="deck_name" autofocus>
+        <button type="submit">Create</button>
+    </form>
+</body>
+
+<script>
+    const { ipcRenderer } = require("electron");
+
+    const form = document.querySelector("form");
+    form.addEventListener('submit', submitForm);
+
+    function submitForm(event) {
+        event.preventDefault();
+        const deck_name = document.querySelector("#deck_name").value;
+        ipcRenderer.send("deck_name:create", deck_name);
+    }
+
+    ipcRenderer.on('alert', function (event, message) {
+        alert(message);
+    });
+
+</script>
+
+</html>

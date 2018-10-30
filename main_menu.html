@@ -1,4 +1,4 @@
-<!DOCTYPE <!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 
 <head>
@@ -14,5 +14,22 @@
         <button type="button" id="create-deck">Create deck</button>
     </div>
 </body>
+<script>
+    const { BrowserWindow } = require("electron").remote;
+    const { ipcRenderer } = require("electron");
+
+    const ceateDeckBtn = document.getElementById("create-deck");
+
+    ceateDeckBtn.addEventListener("click", (event) => {
+        let createDeckWindow = new BrowserWindow({ width: 300, height: 150, title: "Create Deck" });
+
+        createDeckWindow.loadFile("create_deck.html");
+
+        createDeckWindow.on("close", () => {
+            win = null;
+        });
+    });
+
+</script>
 
 </html>
