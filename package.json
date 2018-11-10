@@ -17,6 +17,6 @@
   },
   "homepage": "https://github.com/brettkolodny/Taliiz-Memory-Game#readme",
   "devDependencies": {
-    "electron": "^3.0.6"
+    "electron": "^3.0.7"
   }
 }
