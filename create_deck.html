@@ -22,9 +22,10 @@
         event.preventDefault();
         const deck_name = document.querySelector("#deck_name").value;
         ipcRenderer.send("deck_name:create", deck_name);
+        ipcRenderer.send("decks:get");
     }
 
-    ipcRenderer.on('alert', function (event, message) {
+    ipcRenderer.on('alert', (event, message) => {
         alert(message);
     });
 
