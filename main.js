@@ -2,7 +2,8 @@ const { app, BrowserWindow, ipcMain } = require("electron");
 const fs = require("fs");
 const { lstatSync, readdirSync } = require("fs");
 const path = require("path");
-const detect = require("detect-file-type");
+const readChunk = require("read-chunk");
+const fileType = require("file-type");
 
 const isDirectory = source => lstatSync(source).isDirectory();
 const getDirectories = source =>
@@ -16,21 +17,7 @@ let main_menu_renderer;
 
 let gameWindow;
 
-let currentCards;
-
-function open_main_menu() {
-  main_menu = new BrowserWindow({
-    width: 400,
-    height: 600,
-    title: "Create Deck"
-  });
-
-  main_menu.loadFile("main_menu.html");
-
-  main_menu.on("close", () => {
-    main_menu = app.exit();
-  });
-}
+app.on("ready", open_main_menu);
 
 ipcMain.on("decks:get", event => {
   const decksPath = path.join(__dirname, "decks");
@@ -71,9 +58,26 @@ ipcMain.on("game:start", (event, deckName) => {
   });
 
   gameWindow.loadFile("game.html");
-  const cards = getCards(deckName);
-  gameWindow.webContents.send("start", cards);
+
+  gameWindow.webContents.on("did-finish-load", () => {
+    const cards = getCards(deckName);
+    gameWindow.webContents.send("start", cards);
+  });
 });
+
+function open_main_menu() {
+  main_menu = new BrowserWindow({
+    width: 400,
+    height: 600,
+    title: "Create Deck"
+  });
+
+  main_menu.loadFile("main_menu.html");
+
+  main_menu.on("close", () => {
+    main_menu = app.exit();
+  });
+}
 
 function getDeckName(deck) {
   let deckName = deck.split("/");
@@ -84,20 +88,22 @@ function getCards(deckName) {
   const deckPath = path.join(__dirname, "decks", deckName);
   let cards = [];
 
-  readdirSync(deckPath).forEach(file => {
-    const filePath = path.join(deckPath, file);
-    detect.fromFile(filePath, (err, result) => {
-      if (result === null) {
-        return;
-      }
-      const fileType = result.ext;
-      if (fileType === "png" || fileType === "jpg") {
-        cards.push(filePath);
-      }
-    });
-  });
+  const files = readdirSync(deckPath);
 
-  console.log(cards);
+  for (i = 0; i < files.length; ++i) {
+    let filePath = path.join(deckPath, files[i]);
+    const buffer = readChunk.sync(filePath, 0, fileType.minimumBytes);
+
+    const type = fileType(buffer);
+    if (type === null) {
+      continue;
+    } else if (type.ext === "png" || type.ext === "jpg") {
+      cards.push({
+        path: filePath,
+        name: files[i].split(".")[0]
+      });
+    }
+  }
+
+  return cards;
 }
-
-app.on("ready", open_main_menu);

@@ -15,8 +15,20 @@
 <script>
   const { ipcRenderer } = require("electron");
 
-  ipcRenderer.on("start", (event, cards) => {
+  let currentCards = null;
 
+  ipcRenderer.on("start", (event, cards) => {
+    const cardsDiv = document.getElementById("cardsDiv");
+    for (i = 0; i < cards.length; ++i) {
+      let card = document.createElement("DIV");
+      card.setAttribute("id", "card");
+
+      let image = document.createElement("IMG");
+      image.setAttribute("src", cards[i].path);
+
+      card.appendChild(image);
+      cardsDiv.appendChild(card);
+    }
   });
 
 </script>
