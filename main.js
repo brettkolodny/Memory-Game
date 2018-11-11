@@ -4,6 +4,7 @@ const { lstatSync, readdirSync } = require("fs");
 const path = require("path");
 const readChunk = require("read-chunk");
 const fileType = require("file-type");
+var os = require("os");
 
 const isDirectory = source => lstatSync(source).isDirectory();
 const getDirectories = source =>
@@ -80,8 +81,14 @@ function open_main_menu() {
 }
 
 function getDeckName(deck) {
-  let deckName = deck.split("/");
-  return deckName[deckName.length - 1];
+  if (os.platform() === "darwin") {
+    let deckName = deck.split("/");
+    return deckName[deckName.length - 1];
+  } else {
+    let deckName = deck.split("\\");
+    console.log(deckName);
+    return deckName[deckName.length - 1];
+  }
 }
 
 function getCards(deckName) {
