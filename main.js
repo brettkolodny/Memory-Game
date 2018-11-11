@@ -58,7 +58,8 @@ ipcMain.on("game:start", (event, deckName) => {
     gameWindow = null;
   });
 
-  gameWindow.loadFile("game.html");
+  const gamePath = path.join(__dirname, "game", "game.html");
+  gameWindow.loadFile(gamePath);
 
   gameWindow.webContents.on("did-finish-load", () => {
     const cards = getCards(deckName);
@@ -72,8 +73,8 @@ function open_main_menu() {
     height: 600,
     title: "Create Deck"
   });
-
-  main_menu.loadFile("main_menu.html");
+  const mainMenuPath = path.join(__dirname, "mainMenu", "mainMenu.html");
+  main_menu.loadFile(mainMenuPath);
 
   main_menu.on("close", () => {
     main_menu = app.exit();
@@ -86,7 +87,6 @@ function getDeckName(deck) {
     return deckName[deckName.length - 1];
   } else {
     let deckName = deck.split("\\");
-    console.log(deckName);
     return deckName[deckName.length - 1];
   }
 }

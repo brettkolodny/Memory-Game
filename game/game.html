@@ -1,0 +1,66 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link rel="stylesheet" type="text/css" media="screen" href="game.css" />
+  </head>
+
+  <body>
+    <div id="currentCard"></div>
+    <div id="cardsDiv" class="card-container"></div>
+  </body>
+</html>
+<script>
+  const { ipcRenderer } = require("electron");
+
+  let currentCards = null;
+
+  let currentCard = null;
+
+  ipcRenderer.on("start", (event, cards) => {
+    const cardsDiv = document.getElementById("cardsDiv");
+
+    currentCards = cards;
+
+    for (i = 0; i < cards.length; ++i) {
+      let card = document.createElement("DIV");
+      card.setAttribute("id", cards[i].name);
+
+      let image = document.createElement("IMG");
+
+      image.setAttribute("id", "card");
+
+      image.setAttribute("src", cards[i].path);
+
+      card.appendChild(image);
+
+      cardsDiv.appendChild(card);
+    }
+
+    setup();
+  });
+
+  function setup() {
+    const currentCardElement = document.getElementById("currentCard");
+    currentCardElement.innerHTML = "";
+    const randNum = Math.floor(Math.random() * currentCards.length);
+
+    currentCard = currentCards[randNum];
+
+    currentCards.splice(randNum, 1);
+
+    cardName = document.createTextNode(currentCard.name);
+    currentCardElement.appendChild(cardName);
+
+    const currentCardBack = document.getElementById(currentCard.name);
+    currentCardBack.addEventListener("click", event => {
+      event.target.parentNode.removeChild(event.target);
+      if (currentCards.length == 0) {
+        alert("You won!");
+      } else {
+        setup();
+      }
+    });
+  }
+</script>

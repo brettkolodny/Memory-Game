@@ -1,0 +1,11 @@
+#card {
+  height: 100px;
+  width: 100px;
+}
+
+.card-container {
+  display: grid;
+  grid-template-columns: auto auto auto;
+  margin: auto;
+  max-width: auto;
+}
