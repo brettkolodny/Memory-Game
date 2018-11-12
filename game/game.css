@@ -1,6 +1,17 @@
 #card {
   height: 100px;
   width: 100px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 15%;
+  border: solid;
+}
+
+#currentCard {
+  font-size: 300%;
+  border: 30px;
+  text-align: center;
 }
 
 .card-container {
@@ -8,4 +19,11 @@
   grid-template-columns: auto auto auto;
   margin: auto;
   max-width: auto;
+}
+
+.card-div {
+  width: 150px;
+  height: 150px;
+  display: block;
+  margin: auto;
 }

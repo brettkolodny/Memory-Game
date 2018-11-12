@@ -4,11 +4,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <link rel="stylesheet" type="text/css" media="screen" href="game.css" />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      media="screen"
+      href="bootstrap.css"
+    />
   </head>
 
   <body>
     <div id="currentCard"></div>
-    <div id="cardsDiv" class="card-container"></div>
+    <div id="cardsDiv" class="card-container col-md-1"></div>
   </body>
 </html>
 <script>
@@ -26,6 +32,7 @@
     for (i = 0; i < cards.length; ++i) {
       let card = document.createElement("DIV");
       card.setAttribute("id", cards[i].name);
+      card.setAttribute("class", "card-div");
 
       let image = document.createElement("IMG");
 
