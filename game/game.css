@@ -1,4 +1,4 @@
-#card {
+.card {
   height: 100px;
   width: 100px;
   display: block;
@@ -26,4 +26,8 @@
   height: 150px;
   display: block;
   margin: auto;
+}
+
+.wrong-card {
+  border-color: red;
 }
