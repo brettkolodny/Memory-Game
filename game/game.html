@@ -4,12 +4,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <link rel="stylesheet" type="text/css" media="screen" href="game.css" />
-    <link
-      rel="stylesheet"
-      type="text/css"
-      media="screen"
-      href="bootstrap.css"
-    />
   </head>
 
   <body>
@@ -25,20 +19,35 @@
   let currentCard = null;
 
   ipcRenderer.on("start", (event, cards) => {
+    if (cards.length == 0) {
+      alert("You win!");
+    }
+
+    let jumbledCards = [];
+    while (cards.length > 0) {
+      const index = Math.floor(Math.random() * cards.length);
+      const card = cards.splice(index, 1);
+      jumbledCards.push(card.pop());
+    }
+
     const cardsDiv = document.getElementById("cardsDiv");
 
-    currentCards = cards;
+    currentCards = jumbledCards;
 
-    for (i = 0; i < cards.length; ++i) {
+    for (i = 0; i < jumbledCards.length; ++i) {
       let card = document.createElement("DIV");
-      card.setAttribute("id", cards[i].name);
+      card.setAttribute("id", jumbledCards[i].name);
       card.setAttribute("class", "card-div");
+      card.addEventListener("click", event => {
+        if (event.target !== document.getElementById(currentCard)) {
+          event.target.style.borderColor = "red";
+        }
+      });
 
       let image = document.createElement("IMG");
 
-      image.setAttribute("id", "card");
-
-      image.setAttribute("src", cards[i].path);
+      image.setAttribute("class", "card");
+      image.setAttribute("src", jumbledCards[i].path);
 
       card.appendChild(image);
 
@@ -47,6 +56,13 @@
 
     setup();
   });
+
+  function setAllCardBordersBlack() {
+    const cards = document.getElementsByClassName("card");
+    for (i = 0; i < cards.length; i++) {
+      cards[i].style.borderColor = "black";
+    }
+  }
 
   function setup() {
     const currentCardElement = document.getElementById("currentCard");
@@ -61,11 +77,13 @@
     currentCardElement.appendChild(cardName);
 
     const currentCardBack = document.getElementById(currentCard.name);
+
     currentCardBack.addEventListener("click", event => {
       event.target.parentNode.removeChild(event.target);
       if (currentCards.length == 0) {
         alert("You won!");
       } else {
+        setAllCardBordersBlack();
         setup();
       }
     });
