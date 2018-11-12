@@ -68,15 +68,11 @@ ipcMain.on("game:start", (event, deckName) => {
 });
 
 function open_main_menu() {
-  const iconPath = path.join(__dirname, "iconJPG");
-
   main_menu = new BrowserWindow({
     width: 400,
     height: 600,
-    title: "Create Deck",
-    icon: iconPath
+    title: "Create Deck"
   });
-
   const mainMenuPath = path.join(__dirname, "mainMenu", "mainMenu.html");
   main_menu.loadFile(mainMenuPath);
 
