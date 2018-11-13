@@ -44,11 +44,9 @@
 
         deck.addEventListener("click", event => {
           let deckName = event.target.textContent;
-          ipcRenderer.send("game:start", deckName);
+          ipcRenderer.send("game:type-select", deckName);
         });
       }
-
-      console.log(deckNames);
     });
 
     ceateDeckBtn.addEventListener("click", event => {

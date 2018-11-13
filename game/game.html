@@ -13,16 +13,22 @@
 </html>
 <script>
   const { ipcRenderer } = require("electron");
+  const remote = require("electron").remote;
 
-  let currentCards = null;
+  let currentCards;
+  let currentCard;
+  let reverseGame;
 
-  let currentCard = null;
-
-  ipcRenderer.on("start", (event, cards) => {
+  //Runs after the window is loaded
+  ipcRenderer.on("start", (event, cards, reverse) => {
     if (cards.length == 0) {
       alert("You win!");
+      remote.getCurrentWindow().close();
     }
 
+    reverseGame = reverse;
+
+    //Jumbles the cards array so that they don't appear in the same order every time
     let jumbledCards = [];
     while (cards.length > 0) {
       const index = Math.floor(Math.random() * cards.length);
@@ -44,12 +50,17 @@
         }
       });
 
-      let image = document.createElement("IMG");
-
-      image.setAttribute("class", "card");
-      image.setAttribute("src", jumbledCards[i].path);
-
-      card.appendChild(image);
+      if (!reverseGame) {
+        let image = document.createElement("IMG");
+        image.setAttribute("class", "card");
+        image.setAttribute("src", jumbledCards[i].path);
+        card.appendChild(image);
+      } else {
+        let cardText = document.createTextNode(jumbledCards[i].name);
+        card.setAttribute("class", "card-reverse");
+        //card.className += " card-reverse";
+        card.appendChild(cardText);
+      }
 
       cardsDiv.appendChild(card);
     }
@@ -58,7 +69,12 @@
   });
 
   function setAllCardBordersBlack() {
-    const cards = document.getElementsByClassName("card");
+    let cards;
+    if (reverseGame) {
+      cards = document.getElementsByClassName("card-reverse");
+    } else {
+      cards = document.getElementsByClassName("card");
+    }
     for (i = 0; i < cards.length; i++) {
       cards[i].style.borderColor = "black";
     }
@@ -73,8 +89,14 @@
 
     currentCards.splice(randNum, 1);
 
-    cardName = document.createTextNode(currentCard.name);
-    currentCardElement.appendChild(cardName);
+    let cardInner;
+    if (!reverseGame) {
+      cardInner = document.createTextNode(currentCard.name);
+    } else {
+      cardInner = document.createElement("IMG");
+      cardInner.setAttribute("src", currentCard.path);
+    }
+    currentCardElement.appendChild(cardInner);
 
     const currentCardBack = document.getElementById(currentCard.name);
 
@@ -82,6 +104,7 @@
       event.target.parentNode.removeChild(event.target);
       if (currentCards.length == 0) {
         alert("You won!");
+        remote.getCurrentWindow().close();
       } else {
         setAllCardBordersBlack();
         setup();

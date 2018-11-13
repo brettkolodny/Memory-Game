@@ -5,18 +5,36 @@
   margin-left: auto;
   margin-right: auto;
   margin-top: 15%;
-  border: solid;
+  border: solid 6px;
+}
+
+.card-reverse {
+  height: 100px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 15%;
+  border: solid 6px;
+  text-align: center;
+  font-size: 30px;
+  grid-row-gap: 50px;
+  grid-column-gap: 50px;
 }
 
 #currentCard {
   font-size: 300%;
-  border: 30px;
-  text-align: center;
+  border: 75px;
+  margin: auto;
+  background-color: black;
+  color: white;
+  position: fixed;
+  bottom: 0;
+  right: 0;
 }
 
 .card-container {
   display: grid;
-  grid-template-columns: auto auto auto;
+  grid-template-columns: auto auto auto auto;
   margin: auto;
   max-width: auto;
 }

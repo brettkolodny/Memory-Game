@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain } = require("electron");
+const { app, BrowserWindow, ipcMain, dialog } = require("electron");
 const fs = require("fs");
 const { lstatSync, readdirSync } = require("fs");
 const path = require("path");
@@ -51,19 +51,20 @@ ipcMain.on("deck_name:create", (event, deck_name) => {
   });
 });
 
-ipcMain.on("game:start", (event, deckName) => {
-  gameWindow = new BrowserWindow({ width: 750, height: 750, title: deckName });
+ipcMain.on("game:type-select", (event, deckName) => {
+  const options = {
+    type: "info",
+    title: "Game type",
+    message: "Do you want to reverse the cards?",
+    buttons: ["Yes", "No"]
+  };
 
-  gameWindow.on("close", () => {
-    gameWindow = null;
-  });
-
-  const gamePath = path.join(__dirname, "game", "game.html");
-  gameWindow.loadFile(gamePath);
-
-  gameWindow.webContents.on("did-finish-load", () => {
-    const cards = getCards(deckName);
-    gameWindow.webContents.send("start", cards);
+  dialog.showMessageBox(options, index => {
+    if (index === 0) {
+      startGame(deckName, true);
+    } else {
+      startGame(deckName, false);
+    }
   });
 });
 
@@ -73,8 +74,7 @@ function open_main_menu() {
   main_menu = new BrowserWindow({
     width: 400,
     height: 600,
-    title: "Create Deck",
-    icon: iconPath
+    title: "Create Deck"
   });
 
   const mainMenuPath = path.join(__dirname, "mainMenu", "mainMenu.html");
@@ -82,6 +82,21 @@ function open_main_menu() {
 
   main_menu.on("close", () => {
     main_menu = app.exit();
+  });
+}
+
+function startGame(deckName, reverse) {
+  gameWindow = new BrowserWindow({ width: 750, height: 800, title: deckName });
+  gameWindow.on("close", () => {
+    gameWindow = null;
+  });
+
+  const gamePath = path.join(__dirname, "game", "game.html");
+  gameWindow.loadFile(gamePath);
+
+  gameWindow.webContents.on("did-finish-load", () => {
+    const cards = getCards(deckName);
+    gameWindow.webContents.send("start", cards, reverse);
   });
 }
 
