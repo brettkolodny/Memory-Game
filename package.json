@@ -17,7 +17,9 @@
   },
   "homepage": "https://github.com/brettkolodny/Taliiz-Memory-Game#readme",
   "devDependencies": {
-    "electron": "^3.0.8",
+    "@types/file-type": "^5.2.1",
+    "@types/read-chunk": "^2.1.0",
+    "electron": "3.0.9",
     "electron-packager": "^12.2.0"
   },
   "dependencies": {
