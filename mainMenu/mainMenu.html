@@ -5,12 +5,6 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <title>Taliiz Memory Game</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link
-      rel="stylesheet"
-      type="text/css"
-      media="screen"
-      href="bootstrap.css"
-    />
     <link rel="stylesheet" type="text/css" media="screen" href="mainMenu.css" />
   </head>
 
@@ -27,6 +21,7 @@
     const { ipcRenderer } = require("electron");
     const currentWindow = require("electron").remote.getCurrentWindow();
     const path = require("path");
+    const { shell } = require("electron");
 
     const ceateDeckBtn = document.getElementById("create-deck");
 
@@ -37,15 +32,30 @@
       for (i = 0; i < deckNames.length; ++i) {
         const deck = document.createElement("DIV");
         deck.setAttribute("class", "deck");
-        const deckName = document.createTextNode(deckNames[i]);
 
-        deck.appendChild(deckName);
-        deckList.appendChild(deck);
-
-        deck.addEventListener("click", event => {
+        const deckName = document.createElement("DIV");
+        deckName.appendChild(document.createTextNode(deckNames[i]));
+        deckName.addEventListener("click", event => {
           let deckName = event.target.textContent;
           ipcRenderer.send("game:type-select", deckName);
         });
+
+        const deckOptionsButton = document.createElement("BUTTON");
+        deckOptionsButton.appendChild(document.createTextNode("⚙️"));
+        deckOptionsButton.addEventListener("click", event => {
+          const deckPath = path.join(
+            __dirname,
+            "..",
+            "decks",
+            deckName.textContent
+          );
+          shell.openItem(deckPath);
+        });
+
+        deck.appendChild(deckName);
+        deck.appendChild(deckOptionsButton);
+
+        deckList.appendChild(deck);
       }
     });
 
